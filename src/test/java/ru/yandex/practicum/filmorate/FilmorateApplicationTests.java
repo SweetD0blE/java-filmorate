@@ -52,7 +52,7 @@ class FilmorateApplicationTests {
 		film.setId(1);
 
 		final UpdateException e = assertThrows(UpdateException.class, () -> filmController.update(film));
-		assertEquals("Ошибка обновления: Фильма с таким id не существует.", e.getDetailMessage());
+		assertEquals("Ошибка обновления: Фильма с id=" + film.getId() + " не существует", e.getDetailMessage());
 	}
 
 	@Test
@@ -60,7 +60,7 @@ class FilmorateApplicationTests {
 		user.setId(1);
 
 		final UpdateException e = assertThrows(UpdateException.class, () -> userController.update(user));
-		assertEquals("Ошибка обновления: Пользователя с таким id не существует", e.getDetailMessage());
+		assertEquals("Ошибка обновления: Пользователя с id=" + user.getId() + " не существует", e.getDetailMessage());
 	}
 
 	@Test
