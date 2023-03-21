@@ -1,2 +1,12 @@
-package ru.yandex.practicum.filmorate.exception;public class UpdateException {
+package ru.yandex.practicum.filmorate.exception;
+
+public class UpdateException extends RuntimeException {
+
+    public UpdateException(String message) {
+        super(message);
+    }
+
+    public String getDetailMessage() {
+        return "Ошибка обновления: " + getMessage();
+    }
 }
