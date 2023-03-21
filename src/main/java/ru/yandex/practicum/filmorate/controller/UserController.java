@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UpdateException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
@@ -45,7 +46,7 @@ public class UserController {
             users.put(user.getId(), user);
             return user;
         } else {
-            throw new UpdateException("Пользователя с таким id не существует");
+            throw new UpdateException("Пользователя с id=" + user.getId() + " не существует");
         }
     }
 
@@ -57,6 +58,14 @@ public class UserController {
         if (user.getName().isEmpty()) {
             user.setName(user.getLogin());
             log.info("Пользователю с id = {}, установлено имя: {}", user.getId(), user.getName());
+        }
+        if (user.getEmail() == null || user.getEmail().isBlank() || !(user.getEmail().contains("@"))) {
+            log.warn("Ошибка валидации: Электронная почта не может быть пустой и должна содержать символ @");
+            throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @");
+        }
+        if (user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
+            log.warn("Ошибка валидации: Логин не может быть пустым и содержать пробелы");
+            throw new ValidationException("Логин не может быть пустым и содержать пробелы");
         }
     }
 }

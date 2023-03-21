@@ -63,4 +63,43 @@ class FilmorateApplicationTests {
 		assertEquals("Ошибка обновления: Пользователя с таким id не существует", e.getDetailMessage());
 	}
 
+	@Test
+	public void validateEmailNullTest() {
+		user.setEmail(null);
+
+		final ValidationException e = assertThrows(ValidationException.class, () -> userController.update(user));
+		assertEquals("Ошибка валидации: Электронная почта не может быть пустой и должна содержать символ @", e.getDetailMessage());
+	}
+
+	@Test
+	public void validateEmailIsBlankTest() {
+		user.setEmail("");
+
+		final ValidationException e = assertThrows(ValidationException.class, () -> userController.update(user));
+		assertEquals("Ошибка валидации: Электронная почта не может быть пустой и должна содержать символ @", e.getDetailMessage());
+	}
+
+	@Test
+	public void validateLoginNullTest() {
+		user.setLogin(null);
+
+		final ValidationException e = assertThrows(ValidationException.class, () -> userController.update(user));
+		assertEquals("Ошибка валидации: Логин не может быть пустым и содержать пробелы", e.getDetailMessage());
+	}
+
+	@Test
+	public void validateLoginIsBlankTest() {
+		user.setLogin("");
+
+		final ValidationException e = assertThrows(ValidationException.class, () -> userController.update(user));
+		assertEquals("Ошибка валидации: Логин не может быть пустым и содержать пробелы", e.getDetailMessage());
+	}
+
+	@Test
+	public void validateLoginTest() {
+		user.setLogin("user 1234");
+
+		final ValidationException e = assertThrows(ValidationException.class, () -> userController.update(user));
+		assertEquals("Ошибка валидации: Логин не может быть пустым и содержать пробелы", e.getDetailMessage());
+	}
 }

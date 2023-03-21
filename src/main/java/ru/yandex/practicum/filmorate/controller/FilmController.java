@@ -48,7 +48,7 @@ public class FilmController {
             films.put(film.getId(), film);
             return film;
         } else {
-            throw new UpdateException("Фильма с таким id не существует.");
+            throw new UpdateException("Фильма с id=" + film.getId() + " не существует");
         }
     }
 
