@@ -28,7 +28,7 @@ class FilmorateApplicationTests {
 
 	@BeforeEach
 	public void beforeEach() {
-		filmController = new FilmController(new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage()));
+		filmController = new FilmController(new FilmService(new InMemoryFilmStorage()));
 		film = new Film();
 		film.setName("Name");
 		film.setDescription("Description");
