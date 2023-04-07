@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.StorageException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -16,10 +18,12 @@ import java.util.Set;
 @Service
 public class FilmService {
     private final FilmStorage filmStorage;
+    private final UserStorage userStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage) {
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
         this.filmStorage = filmStorage;
+        this.userStorage = userStorage;
     }
 
     public Film create(Film film) {
@@ -41,9 +45,10 @@ public class FilmService {
     }
 
     public Film like(int filmId, int userId) {
+        User user = userStorage.getUser(userId);
         Film film = filmStorage.getFilm(filmId);
         Set<Integer> likes = film.getLikes();
-        likes.add(userId);
+        likes.add(user.getId());
         return film;
     }
 
