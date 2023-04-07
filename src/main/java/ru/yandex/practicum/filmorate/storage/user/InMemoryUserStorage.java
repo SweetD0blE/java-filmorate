@@ -52,7 +52,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.containsKey(id)) {
             return users.get(id);
         } else {
-            throw new StorageException("Пользователя с d=" + getUser(id) + " не существует");
+            throw new StorageException("Пользователя с таким id не существует");
         }
     }
 }

@@ -52,7 +52,7 @@ public class InMemoryFilmStorage implements FilmStorage {
        if (films.containsKey(id)) {
            return films.get(id);
        } else {
-           throw new StorageException("Пользователя с d=" + getFilm(id) + " не существует");
+           throw new StorageException("Фильма с таким id не существует");
        }
     }
 }
