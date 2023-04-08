@@ -5,10 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.controller.UserController;
-import ru.yandex.practicum.filmorate.exception.UpdateException;
+import ru.yandex.practicum.filmorate.exception.StorageException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
@@ -24,14 +28,14 @@ class FilmorateApplicationTests {
 
 	@BeforeEach
 	public void beforeEach() {
-		filmController = new FilmController();
+		filmController = new FilmController(new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage()));
 		film = new Film();
 		film.setName("Name");
 		film.setDescription("Description");
 		film.setReleaseDate(LocalDate.now());
 		film.setDuration(100L);
 
-		userController = new UserController();
+		userController = new UserController(new UserService(new InMemoryUserStorage()));
 		user = new User();
 		user.setName("Name");
 		user.setLogin("Login");
@@ -48,19 +52,19 @@ class FilmorateApplicationTests {
 	}
 
 	@Test
-	public void shouldThrowUpdateExceptionInFilmController() {
+	public void shouldThrowStorageExceptionInFilmController() {
 		film.setId(1);
 
-		final UpdateException e = assertThrows(UpdateException.class, () -> filmController.update(film));
-		assertEquals("Ошибка обновления: Фильма с id=" + film.getId() + " не существует", e.getDetailMessage());
+		final StorageException e = assertThrows(StorageException.class, () -> filmController.update(film));
+		assertEquals("Фильма с id=" + film.getId() + " не существует", e.getMessage());
 	}
 
 	@Test
-	public void shouldThrowUpdateExceptionInUserController() {
+	public void shouldThrowStorageExceptionInUserController() {
 		user.setId(1);
 
-		final UpdateException e = assertThrows(UpdateException.class, () -> userController.update(user));
-		assertEquals("Ошибка обновления: Пользователя с id=" + user.getId() + " не существует", e.getDetailMessage());
+		final StorageException e = assertThrows(StorageException.class, () -> userController.update(user));
+		assertEquals("Пользователя с id=" + user.getId() + " не существует", e.getMessage());
 	}
 
 	@Test
