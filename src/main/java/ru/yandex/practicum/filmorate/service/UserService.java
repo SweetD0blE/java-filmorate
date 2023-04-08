@@ -41,7 +41,7 @@ public class UserService {
 
    public User addFriend(int id, int idFriend) {
         if (id == idFriend) {
-            throw new ServiceException("Невозможно добавить в друзья самого себя. У вас одинаковые ID.");
+            throw new ServiceException("Невозможно добавить в друзья самого себя. Ваше id=" + id + ". Id друга=" + idFriend);
         }
         User user = userStorage.getUser(id);
         User friend = userStorage.getUser(idFriend);

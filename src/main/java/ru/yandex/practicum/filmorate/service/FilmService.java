@@ -10,10 +10,8 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
@@ -62,15 +60,11 @@ public class FilmService {
         return film;
     }
 
-    public List<Film> getTop10PopularFilms(int count) {
-        List<Film> films = filmStorage.getFilms();
-        Comparator<Film> filmComparator = Comparator.comparingInt(o -> o.getLikes().size());
-        Collections.sort(films, filmComparator.reversed());
-
-        if (count >= films.size()) {
-            return films;
-        }
-        return films.subList(0, count);
+    public List<Film> getTopCountPopularFilms(int count) {
+        return getFilms().stream()
+                .sorted(Comparator.comparing(Film::getAmountFilmLikes).reversed())
+                .limit(count)
+                .collect(Collectors.toList());
     }
 
     private void checkDate(Film film) {

@@ -24,22 +24,21 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film update(Film film) {
-        if (films.containsKey(film.getId())) {
-            films.put(film.getId(), film);
-            return film;
-        } else {
+        if (!films.containsKey(film.getId())) {
             throw new StorageException("Фильма с id=" + film.getId() + " не существует");
         }
+        films.put(film.getId(), film);
+        return film;
+
     }
 
     @Override
     public Film delete(Film film) {
-       if (films.containsKey(film.getId())) {
-           films.remove(film.getId());
-           return film;
-       } else {
-           throw new StorageException("Фильма с id=" + film.getId() + " не существует");
-       }
+        if (!films.containsKey(film.getId())) {
+            throw new StorageException("Фильма с id=" + film.getId() + " не существует");
+        }
+        films.remove(film.getId());
+        return film;
     }
 
     @Override
@@ -49,10 +48,9 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film getFilm(int id) {
-       if (films.containsKey(id)) {
-           return films.get(id);
-       } else {
-           throw new StorageException("Фильма с таким id не существует");
+       if (!films.containsKey(id)) {
+           throw new StorageException("Фильма с id=" + id + " не существует");
        }
+        return films.get(id);
     }
 }

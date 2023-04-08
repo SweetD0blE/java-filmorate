@@ -24,22 +24,20 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User update(User user) {
-        if (users.containsKey(user.getId())) {
-            users.put(user.getId(), user);
-            return user;
-        } else {
+        if (!users.containsKey(user.getId())) {
             throw new StorageException("Пользователя с id=" + user.getId() + " не существует");
         }
+        users.put(user.getId(), user);
+        return user;
     }
 
     @Override
     public User delete(User user) {
-        if (users.containsKey(user.getId())) {
-            users.remove(user.getId());
-            return user;
-        } else {
+        if (!users.containsKey(user.getId())) {
             throw new StorageException("Пользователя с id=" + user.getId() + " не существует");
         }
+        users.remove(user.getId());
+        return user;
     }
 
     @Override
@@ -49,10 +47,9 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User getUser(int id) {
-        if (users.containsKey(id)) {
-            return users.get(id);
-        } else {
-            throw new StorageException("Пользователя с таким id не существует");
+        if (!users.containsKey(id)) {
+            throw new StorageException("Пользователя с id=" + id + " не существует");
         }
+        return users.get(id);
     }
 }
