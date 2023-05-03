@@ -1,7 +1,7 @@
 # java-filmorate
 ## База данных
 
-![Filmorate](https://user-images.githubusercontent.com/73616471/232525668-fda3667a-96d1-433d-a6f3-2c0a1e4379da.png)
+![Filmorate](https://user-images.githubusercontent.com/73616471/235971118-e8b42b9d-6349-4dd0-a6f3-5a7818a307b0.png)
 
 ## Описание
 
