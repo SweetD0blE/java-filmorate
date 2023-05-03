@@ -17,6 +17,7 @@ mvnw
 mvnw.cmd
 *.mvn
 
+
 ### STS ###
 .apt_generated
 .classpath
@@ -47,3 +48,7 @@ build/
 
 *.db
 db/*
+
+# OS generated files #
+######################
+.DS_Store
