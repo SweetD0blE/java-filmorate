@@ -73,10 +73,10 @@ ALTER TABLE friendships ADD CONSTRAINT pk_friendships_friend_id FOREIGN KEY(frie
 REFERENCES users (user_id);
 
 ALTER TABLE films ADD CONSTRAINT fk_rating_id FOREIGN KEY(rating_id)
-REFERENCES mpa_rating (id);
+REFERENCES rating (rating_id);
 
 ALTER TABLE film_genre ADD CONSTRAINT fk_film_genre_film_id FOREIGN KEY(film_id)
 REFERENCES films (film_id);
 
 ALTER TABLE film_genre ADD CONSTRAINT fk_film_genre_genre_id FOREIGN KEY(genre_id)
-REFERENCES genres (genre_id);
+REFERENCES genre (genre_id);

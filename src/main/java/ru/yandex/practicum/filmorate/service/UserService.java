@@ -32,68 +32,44 @@ public class UserService {
     }
 
    public List<User> getUsers() {
-        return userStorage.getUsers();
+        return userStorage.findAll();
    }
 
    public User getUser(int id) {
-        return userStorage.getUser(id);
+        return userStorage.findById(id);
    }
 
    public User addFriend(int id, int idFriend) {
         if (id == idFriend) {
             throw new ServiceException("Невозможно добавить в друзья самого себя. Ваше id=" + id + ". Id друга=" + idFriend);
         }
-        User user = userStorage.getUser(id);
-        User friend = userStorage.getUser(idFriend);
-
-       Set<Integer> friends = user.getFriends();
-       friends.add(idFriend);
-       user.setFriends(friends);
-
-       friends = friend.getFriends();
-       friends.add(id);
-       friend.setFriends(friends);
-       update(friend);
-
-       return update(user);
+       return userStorage.addFriend(id, idFriend);
    }
 
    public User deleteFriend(int id, int idFriend) {
-        User user = userStorage.getUser(id);
-        User friend = userStorage.getUser(idFriend);
-
-        Set<Integer> friends = user.getFriends();
-        friends.remove(idFriend);
-        user.setFriends(friends);
-
-        friends = friend.getFriends();
-        friends.remove(id);
-        friend.setFriends(friends);
-        update(friend);
-
-        return update(user);
+        return userStorage.deleteFriend(id, idFriend);
    }
 
    public List<User> getFriends(int id) {
-        User user = userStorage.getUser(id);
+        User user = userStorage.findById(id);
         List<User> friends = new ArrayList<>();
 
-        Set<Integer> idFriends = user.getFriends();
+        List<Integer> idFriends = user.getFriends();
 
         for (Integer i : idFriends) {
-            friends.add(userStorage.getUser(i));
+            friends.add(userStorage.findById(i));
         }
         return friends;
    }
 
    public List<User> getCommonFriends(int id, int otherId) {
-        Set<Integer> friendsUser = new HashSet<>(userStorage.getUser(id).getFriends());
-        Set<Integer> friendsOtherUser = new HashSet<>(userStorage.getUser(otherId).getFriends());
+        Set<Integer> friendsUser = new HashSet<>(userStorage.findById(id).getFriends());
+        Set<Integer> friendsOtherUser = new HashSet<>(userStorage.findById(otherId).getFriends());
         List<User> commonFriends = new ArrayList<>();
         friendsUser.retainAll(friendsOtherUser);
 
         for (Integer i : friendsUser) {
-            commonFriends.add(userStorage.getUser(i));
+            commonFriends.add(userStorage.findById(i));
         }
         return commonFriends;
    }

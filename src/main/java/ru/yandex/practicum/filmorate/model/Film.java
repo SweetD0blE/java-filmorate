@@ -9,8 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -26,9 +25,21 @@ public class Film {
     @Positive
     private long duration;
 
-    private Set<Integer> likes = new HashSet<>();
+    private MpaRating mpa;
+    private List<Integer> likes = new ArrayList<>();
+    private List<Genre> genres = new ArrayList<>();
 
     public int getAmountFilmLikes() {
         return likes.size();
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("name", name);
+        values.put("description", description);
+        values.put("release_date", releaseDate);
+        values.put("duration", duration);
+        values.put("rating_id", mpa.getId());
+        return values;
     }
 }

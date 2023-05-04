@@ -10,9 +10,11 @@ public interface FilmStorage {
 
     Film update(Film film);
 
-    Film delete(Film film);
+    void delete(Film film);
 
-    List<Film> getFilms();
+    List<Film> findAll();
 
-    Film getFilm(int id);
+    Film findById(int id);
+
+    Film removeLike(int filmId, int userId);
 }

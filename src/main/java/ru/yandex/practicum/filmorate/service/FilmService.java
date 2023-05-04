@@ -25,39 +25,37 @@ public class FilmService {
     }
 
     public Film create(Film film) {
-        checkDate(film);
+        check(film);
         return filmStorage.create(film);
     }
 
     public Film update(Film film) {
-        checkDate(film);
+        check(film);
         return filmStorage.update(film);
     }
 
     public List<Film> getFilms() {
-        return filmStorage.getFilms();
+        return filmStorage.findAll();
     }
 
     public Film getFilm(int id) {
-        return filmStorage.getFilm(id);
+        return filmStorage.findById(id);
     }
 
     public Film like(int filmId, int userId) {
-        User user = userStorage.getUser(userId);
-        Film film = filmStorage.getFilm(filmId);
-        Set<Integer> likes = film.getLikes();
-        likes.add(user.getId());
+        userStorage.findById(userId);
+        Film film = filmStorage.findById(filmId);
+        List<Integer> likes = film.getLikes();
+        likes.add(userId);
+        film.setLikes(likes);
+        update(film);
         return film;
     }
 
     public Film removeLike(int filmId, int userId) {
-        Film film = filmStorage.getFilm(filmId);
-        Set<Integer> likes = film.getLikes();
-        boolean isRemove = likes.remove(userId);
-        if (!isRemove || userId <= 0) {
-            throw new StorageException("Лайк пользователя" + userId + " не был найден");
-        }
-        return film;
+        filmStorage.findById(filmId);
+        userStorage.findById(userId);
+        return filmStorage.removeLike(filmId, userId);
     }
 
     public List<Film> getTopCountPopularFilms(int count) {
@@ -67,11 +65,9 @@ public class FilmService {
                 .collect(Collectors.toList());
     }
 
-    private void checkDate(Film film) {
+    private void check(Film film) {
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             throw new ValidationException("Дата релиза фильма не раньше 28 декабря 1895 года.");
         }
     }
-
-
 }
