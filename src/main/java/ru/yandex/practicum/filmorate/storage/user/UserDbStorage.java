@@ -93,7 +93,7 @@ public class UserDbStorage implements UserStorage {
         if (userRows.next()) {
             SqlRowSet friendsRows = jdbcTemplate.queryForRowSet(
                     "SELECT friend_id " +
-                            "FROM user_friends " +
+                            "FROM friendships " +
                             "WHERE (user_id = ?);", userId);
 
             List<Integer> friends = new ArrayList<>();
@@ -102,11 +102,11 @@ public class UserDbStorage implements UserStorage {
             }
 
             User user = new User(
-                    Integer.parseInt(userRows.getString("user_id")),
-                    userRows.getString("email").trim(),
-                    userRows.getString("login").trim(),
-                    userRows.getString("name").trim(),
-                    LocalDate.parse(userRows.getString("birthday").trim(), formatter),
+                    Integer.parseInt(userRows.getString("USER_ID")),
+                    userRows.getString("EMAIL").trim(),
+                    userRows.getString("LOGIN").trim(),
+                    userRows.getString("NAME").trim(),
+                    LocalDate.parse(userRows.getString("BIRTHDAY").trim(), formatter),
                     friends);
 
             log.info("Найден пользователь: {} {}", user.getId(), user.getName());
@@ -121,7 +121,7 @@ public class UserDbStorage implements UserStorage {
     public User addFriend(int userId, int friendId) {
         findById(userId);
         findById(friendId);
-        String sqlQuery = "SELECT * FROM user_friends " +
+        String sqlQuery = "SELECT * FROM friendships " +
                 "WHERE user_id = ? " +
                 "AND friend_id = ?;";
         SqlRowSet friendsRows = jdbcTemplate.queryForRowSet(sqlQuery, userId, friendId);
@@ -198,7 +198,7 @@ public class UserDbStorage implements UserStorage {
 
         if (usersRow.next()) {
             int id = Integer.parseInt(usersRow.getString("user_id"));
-            throw new StorageException(String.format("Пользователь с похожими параметрами уже существует, id = %d", id));
+            throw new StorageException(String.format("Пользователь с одинаковыми параметрами уже существует. Его id =%d", id));
         }
     }
 }

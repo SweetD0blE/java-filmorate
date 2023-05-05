@@ -22,11 +22,11 @@ public class MpaRatingDaoImpl implements MpaRatingDao {
 
     @Override
     public MpaRating findMpaById(int id) {
-        SqlRowSet mpaRows = jdbcTemplate.queryForRowSet("SELECT * FROM rating WHERE id = ?", id);
+        SqlRowSet mpaRows = jdbcTemplate.queryForRowSet("SELECT * FROM rating WHERE rating_id = ?", id);
         if (mpaRows.next()) {
             MpaRating mpa = MpaRating.builder()
-                    .id(Integer.parseInt(mpaRows.getString("id")))
-                    .name(mpaRows.getString("name").trim())
+                    .id(Integer.parseInt(mpaRows.getString("RATING_ID")))
+                    .name(mpaRows.getString("NAME").trim())
                     .build();
 
             log.info("Найден рейтинг: {} {}", mpa.getId(), mpa.getName());
@@ -44,8 +44,8 @@ public class MpaRatingDaoImpl implements MpaRatingDao {
 
         while (mpaRows.next()) {
             MpaRating mpa = MpaRating.builder()
-                    .id(Integer.parseInt(mpaRows.getString("id")))
-                    .name(mpaRows.getString("name").trim())
+                    .id(Integer.parseInt(mpaRows.getString("RATING_ID")))
+                    .name(mpaRows.getString("NAME").trim())
                     .build();
             mpaRatings.add(mpa);
         }

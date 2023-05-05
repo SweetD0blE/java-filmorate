@@ -22,11 +22,11 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public Genre findGenreById(int id) {
-        SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT * FROM genre WHERE id = ?", id);
+        SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT * FROM genre WHERE genre_id = ?", id);
         if (genreRows.next()) {
             Genre genre = Genre.builder()
-                    .id(Integer.parseInt(genreRows.getString("id")))
-                    .name(genreRows.getString("name").trim())
+                    .id(Integer.parseInt(genreRows.getString("GENRE_ID")))
+                    .name(genreRows.getString("NAME").trim())
                     .build();
 
             log.info("Найден жанр: {} {}", genre.getId(), genre.getName());
@@ -44,8 +44,8 @@ public class GenreDaoImpl implements GenreDao {
 
         while (genreRows.next()) {
             Genre genre = Genre.builder()
-                    .id(Integer.parseInt(genreRows.getString("id")))
-                    .name(genreRows.getString("name").trim())
+                    .id(Integer.parseInt(genreRows.getString("GENRE_ID")))
+                    .name(genreRows.getString("NAME").trim())
                     .build();
             genres.add(genre);
         }

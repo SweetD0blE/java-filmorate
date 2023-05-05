@@ -61,12 +61,12 @@ public class FilmDbStorage implements FilmStorage {
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sqlQuery, film.getId());
 
         if (filmRows.next()) {
-            sqlQuery = "UPDATE films" +
-                    "SET name = ?, " +
+            sqlQuery = "UPDATE films " +
+                    "SET name= ?, " +
                     "description = ?, " +
                     "release_date = ?, " +
                     "duration = ?, " +
-                    "rating_id = ?, " +
+                    "rating_id = ? " +
                     "WHERE film_id = ?;";
 
             jdbcTemplate.update(sqlQuery,
@@ -137,12 +137,12 @@ public class FilmDbStorage implements FilmStorage {
           }
 
           Film film = new Film(
-                            Integer.parseInt(filmRows.getString("film_io")),
-                            filmRows.getString("name").trim(),
-                            filmRows.getString("description").trim(),
-                            LocalDate.parse(filmRows.getString("release_date").trim(), formatter),
-                            Integer.parseInt(filmRows.getString("duration")),
-                  mpaRatingDao.findMpaById(Integer.parseInt(filmRows.getString("rating_id"))),
+                            Integer.parseInt(filmRows.getString("FILM_ID")),
+                            filmRows.getString("NAME").trim(),
+                            filmRows.getString("DESCRIPTION").trim(),
+                            LocalDate.parse(filmRows.getString("RELEASE_DATE").trim(), formatter),
+                            Integer.parseInt(filmRows.getString("DURATION")),
+                  mpaRatingDao.findMpaById(Integer.parseInt(filmRows.getString("RATING_ID"))),
                   likes,
                   genres
                     );
@@ -211,8 +211,8 @@ public class FilmDbStorage implements FilmStorage {
 
     private void findMatch(Film film) {
         String sqlQuery = "SELECT * FROM films " +
-                "WHERE (name=?) " +
-                "AND (release_date=?) AND (duration=?);";
+                "WHERE (NAME=?) " +
+                "AND (RELEASE_DATE=?) AND (DURATION=?);";
         SqlRowSet filmsRow = jdbcTemplate.queryForRowSet(sqlQuery, film.getName(), film.getReleaseDate(), film.getDuration());
         if (filmsRow.next()) {
             int id = Integer.parseInt(filmsRow.getString("film_id"));

@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS rating CASCADE;
 CREATE TABLE rating (
 	rating_id int AUTO_INCREMENT PRIMARY KEY ,
 	name CHARACTER(40) ,
-	description CHARACTER(40)
+	description CHARACTER(100)
 );
 
 --таблица film_genre
