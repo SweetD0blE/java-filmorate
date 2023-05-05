@@ -204,16 +204,17 @@ public class FilmDbStorage implements FilmStorage {
             sqlQuery = "INSERT INTO likes (user_id, film_id) " +
                     "VALUES (?, ?);";
 
-            jdbcTemplate.update(sqlQuery, filmId, like);
+            jdbcTemplate.update(sqlQuery, like, filmId);
         }
         return likes;
     }
 
     private void findMatch(Film film) {
         String sqlQuery = "SELECT * FROM films " +
-                "WHERE (NAME=?) " +
-                "AND (RELEASE_DATE=?) AND (DURATION=?);";
-        SqlRowSet filmsRow = jdbcTemplate.queryForRowSet(sqlQuery, film.getName(), film.getReleaseDate(), film.getDuration());
+                "WHERE (name=?) " +
+                "AND (description=?) " +
+                "AND (release_date=?) AND (duration=?);";
+        SqlRowSet filmsRow = jdbcTemplate.queryForRowSet(sqlQuery, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration());
         if (filmsRow.next()) {
             int id = Integer.parseInt(filmsRow.getString("film_id"));
             throw new StorageException(String.format("Фильм уже существует, id = %d", id));

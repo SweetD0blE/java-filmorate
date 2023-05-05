@@ -127,10 +127,11 @@ class FilmServiceTest {
 
     @Test
     public void testDeleteLikeFilm() {
+        film.setName("testDeleteLikeFilm");
         film = filmService.create(film);
         User userTest = User.builder()
-                .login("login")
-                .email("email@ya.ru")
+                .login("testDeleteLikeFilm")
+                .email("testDeleteLikeFilm@ya.ru")
                 .birthday(LocalDate.now())
                 .build();
         userTest = userService.create(userTest);
