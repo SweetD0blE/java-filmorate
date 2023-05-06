@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.StorageException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.MpaRating;
@@ -51,24 +52,24 @@ class FilmServiceTest {
                 .mpa(MpaRating.builder().name("G").build())
                 .build();
 
-        final StorageException exceptionMpa = assertThrows(
-                StorageException.class,
+        final ValidationException exceptionMpa = assertThrows(
+                ValidationException.class,
                 () -> filmService.create(filmTest)
         );
 
-        assertEquals("Рейтинг с идентификатором 0 не найден.", exceptionMpa.getMessage());
+        assertEquals("Получены некорректные данные. Не указан id рейтинга фильма.", exceptionMpa.getMessage());
 
         List<Genre> genres = new ArrayList<>();
         genres.add(Genre.builder().name("Комедия").build());
         filmTest.setMpa(MpaRating.builder().id(1).build());
         filmTest.setGenres(genres);
 
-        final StorageException exceptionGenre = assertThrows(
-                StorageException.class,
+        final ValidationException exceptionGenre = assertThrows(
+                ValidationException.class,
                 () -> filmService.create(filmTest)
         );
 
-        assertEquals("Жанр с идентификатором 0 не найден", exceptionGenre.getMessage());
+        assertEquals("Получены некорректные данные. Не указан id жанра Комедия фильма.", exceptionGenre.getMessage());
     }
 
     @Test
