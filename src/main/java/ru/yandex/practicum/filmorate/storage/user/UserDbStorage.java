@@ -165,6 +165,7 @@ public class UserDbStorage implements UserStorage {
         sqlQuery = "UPDATE friendships " +
                 "SET status = false " +
                 "WHERE user_id = ? AND friend_id = ?;";
+        jdbcTemplate.update(sqlQuery, friendId, userId);
 
         log.info("Пользователь {} удалил из списка друзей пользователя {}.", userId, friendId);
         return findById(userId);

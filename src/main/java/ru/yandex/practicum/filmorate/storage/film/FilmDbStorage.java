@@ -115,25 +115,21 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film findById(int id) {
-      String sqlQuery = "SELECT * FROM films WHERE film_id = ?";
 
-      SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sqlQuery, id);
+      SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT * FROM films WHERE film_id = ?", id);
 
       if (filmRows.next()) {
-          sqlQuery = "SELECT genre_id FROM film_genre WHERE film_id = ?";
-          SqlRowSet genreRows = jdbcTemplate.queryForRowSet(sqlQuery, id);
+          SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT genre_id FROM film_genre WHERE film_id = ?", id);
 
           List<Genre> genres = new ArrayList<>();
           while (genreRows.next()) {
-              int genreId = Integer.parseInt(genreRows.getString("genre_id"));
+              int genreId = Integer.parseInt(genreRows.getString("GENRE_ID"));
               genres.add(genreDao.findGenreById(genreId));
           }
-
-          sqlQuery = "SELECT user_id FROM likes WHERE film_id = ?";
-          SqlRowSet likesRows = jdbcTemplate.queryForRowSet(sqlQuery, id);
+          SqlRowSet likesRows = jdbcTemplate.queryForRowSet("SELECT user_id FROM likes WHERE film_id = ?", id);
           List<Integer> likes = new ArrayList<>();
           while (likesRows.next()) {
-              likes.add(Integer.parseInt(likesRows.getString("user_id")));
+              likes.add(Integer.parseInt(likesRows.getString("USER_ID")));
           }
 
           Film film = new Film(
@@ -157,10 +153,9 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film removeLike(int filmId, int userId) {
-        String sqlQuery = "DELETE FROM likes " +
+        jdbcTemplate.update("DELETE FROM likes " +
                 "WHERE film_id = ? " +
-                "AND user_id = ?;";
-        jdbcTemplate.update(sqlQuery, filmId, userId);
+                "AND user_id = ?;", filmId, userId);
 
         log.info("Пользователь {} убрал лайк фильму {}.", userId, filmId);
         return findById(filmId);
@@ -212,9 +207,8 @@ public class FilmDbStorage implements FilmStorage {
     private void findMatch(Film film) {
         String sqlQuery = "SELECT * FROM films " +
                 "WHERE (name=?) " +
-                "AND (description=?) " +
                 "AND (release_date=?) AND (duration=?);";
-        SqlRowSet filmsRow = jdbcTemplate.queryForRowSet(sqlQuery, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration());
+        SqlRowSet filmsRow = jdbcTemplate.queryForRowSet(sqlQuery, film.getName(), film.getReleaseDate(), film.getDuration());
         if (filmsRow.next()) {
             int id = Integer.parseInt(filmsRow.getString("film_id"));
             throw new StorageException(String.format("Фильм уже существует, id = %d", id));

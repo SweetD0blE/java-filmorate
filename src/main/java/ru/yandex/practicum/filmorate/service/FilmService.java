@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -66,6 +67,20 @@ public class FilmService {
     private void check(Film film) {
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             throw new ValidationException("Дата релиза фильма не раньше 28 декабря 1895 года.");
+        }
+
+        if ((film.getMpa() != null) && (film.getMpa().getId() == 0)) {
+            throw new ValidationException("Получены некорректные данные. Не указан id рейтинга фильма.");
+        }
+        if (film.getGenres() != null) {
+            List<Genre> genres = film.getGenres();
+            for (Genre genre : genres) {
+                if (genre.getId() == 0) {
+                    throw new ValidationException(
+                            String.format(
+                                    "Получены некорректные данные. Не указан id жанра %s фильма.", genre.getName()));
+                }
+            }
         }
     }
 }
