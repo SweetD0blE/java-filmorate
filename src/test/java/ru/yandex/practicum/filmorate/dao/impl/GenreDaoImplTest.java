@@ -31,7 +31,6 @@ public class GenreDaoImplTest {
                 StorageException.class,
                 () -> genreDao.findGenreById(-1)
         );
-
         assertEquals("Такого жанра не существует", exception.getMessage());
     }
 
