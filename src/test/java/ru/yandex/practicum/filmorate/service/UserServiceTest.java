@@ -46,7 +46,7 @@ class UserServiceTest {
                 () -> userService.getUser(-1)
         );
 
-        assertEquals("Пользователя с указанным id не существует", exception.getMessage());
+        assertEquals("Такого пользователя не существует", exception.getMessage());
     }
 
     @Test
@@ -62,7 +62,7 @@ class UserServiceTest {
                 () -> userService.update(userTest)
         );
 
-        assertEquals("Пользователь с идентификатором -1 не найден.", exception.getMessage());
+        assertEquals("Невозможно обновить id -1 .Его нет в БД", exception.getMessage());
     }
 
     @Test
