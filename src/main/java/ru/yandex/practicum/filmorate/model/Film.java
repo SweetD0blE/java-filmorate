@@ -1,47 +1,52 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Set;
 
 @Data
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class Film {
-    private int id;
-    @NotBlank
-    private String name;
+
+    int id;
+    @NotEmpty
+    String name;
     @Size(max = 200)
-    private String description;
+    String description;
     @NotNull
-    private LocalDate releaseDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    LocalDate releaseDate;
     @Positive
-    private long duration;
+    long duration;
+    @NotNull
+    MpaRating mpa;
+    Set<Integer> likes;
+    Set<Genre> genres;
 
-    private MpaRating mpa;
-    private List<Integer> likes = new ArrayList<>();
-    private List<Genre> genres = new ArrayList<>();
-
-    public int getAmountFilmLikes() {
-        return likes.size();
+    public Film(String name, String description, LocalDate releaseDate, long duration, MpaRating mpa) {
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.mpa = mpa;
     }
 
-    public Map<String, Object> toMap() {
-        Map<String, Object> values = new HashMap<>();
-        values.put("name", name);
-        values.put("description", description);
-        values.put("release_date", releaseDate);
-        values.put("duration", duration);
-        values.put("rating_id", mpa.getId());
-        return values;
+    public Film(String name, String description, LocalDate releaseDate, long duration, MpaRating mpa, Set<Genre> genres) {
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.mpa = mpa;
+        this.genres = genres;
     }
 }

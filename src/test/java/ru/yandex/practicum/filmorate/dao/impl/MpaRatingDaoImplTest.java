@@ -10,7 +10,9 @@ import ru.yandex.practicum.filmorate.model.MpaRating;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hibernate.validator.internal.util.Contracts.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -31,12 +33,12 @@ class MpaRatingDaoImplTest {
                 () -> mpaRatingDao.findMpaById(-1)
         );
 
-        assertEquals("Рейтинг с идентификатором -1 не найден.", exception.getMessage());
+        assertEquals("Такого рейтинга не существует", exception.getMessage());
     }
 
     @Test
     void getRating() {
-        List<MpaRating> ratings = mpaRatingDao.getMpa();
+        List<MpaRating> ratings = mpaRatingDao.findAllMpa();
         assertTrue(ratings.size() == 5, "rating = 5");
     }
 }

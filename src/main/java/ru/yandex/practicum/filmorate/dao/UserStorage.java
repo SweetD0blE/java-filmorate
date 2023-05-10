@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.user;
+package ru.yandex.practicum.filmorate.dao;
 
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -13,6 +13,10 @@ public interface UserStorage {
     void delete(User user);
 
     List<User> findAll();
+
+    List<User> getFriends(int id);
+
+    List<User> getCommonFriends(int userId, int friendId);
 
     User findById(int userId);
 

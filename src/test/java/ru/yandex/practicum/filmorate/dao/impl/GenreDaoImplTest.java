@@ -32,12 +32,12 @@ public class GenreDaoImplTest {
                 () -> genreDao.findGenreById(-1)
         );
 
-        assertEquals("Жанр с идентификатором -1 не найден", exception.getMessage());
+        assertEquals("Такого жанра не существует", exception.getMessage());
     }
 
     @Test
     void getGenres() {
-        List<Genre> genres = genreDao.findAll();
+        List<Genre> genres = genreDao.findAllGenre();
         assertTrue(genres.size() == 6, "genre = 6");
     }
 }

@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -8,7 +9,8 @@ import ru.yandex.practicum.filmorate.dao.GenreDao;
 import ru.yandex.practicum.filmorate.exception.StorageException;
 import ru.yandex.practicum.filmorate.model.Genre;
 
-import java.util.ArrayList;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 @Component
@@ -16,40 +18,35 @@ import java.util.List;
 public class GenreDaoImpl implements GenreDao {
     private final JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public GenreDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Genre findGenreById(int id) {
-        SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT * FROM genre WHERE genre_id = ?", id);
-        if (genreRows.next()) {
-            Genre genre = Genre.builder()
-                    .id(Integer.parseInt(genreRows.getString("GENRE_ID")))
-                    .name(genreRows.getString("NAME").trim())
-                    .build();
-
-            log.info("Найден жанр: {} {}", genre.getId(), genre.getName());
-            return genre;
+        String sql = "SELECT * FROM genre WHERE genre_id = ?";
+        SqlRowSet userRows = jdbcTemplate.queryForRowSet(sql, id);
+        if (userRows.next()) {
+            log.info("Найден жанр с идентификатором: {}", userRows.getString("genre_id"));
+            return jdbcTemplate.queryForObject(sql, this::makeGenre, id);
         } else {
-            log.info("Жанр с идентификатором {} не найден.", id);
-            throw new StorageException(String.format("Жанр с идентификатором %d не найден", id));
+            log.warn("Жанр с идентификатором {} не найден.", id);
+            throw new StorageException("Такого жанра не существует");
+
         }
     }
 
     @Override
-    public List<Genre> findAll() {
-        SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT * FROM genre");
-        List<Genre> genres = new ArrayList<>();
+    public List<Genre> findAllGenre() {
+        String sqlQuery = "SELECT * FROM genre";
+        return jdbcTemplate.query(sqlQuery, this::makeGenre);
+    }
 
-        while (genreRows.next()) {
-            Genre genre = Genre.builder()
-                    .id(Integer.parseInt(genreRows.getString("GENRE_ID")))
-                    .name(genreRows.getString("NAME").trim())
-                    .build();
-            genres.add(genre);
-        }
-        log.info("Получен список из {} жанров", genres.size());
-        return genres;
+    private Genre makeGenre(ResultSet rs, int rowNum) throws SQLException {
+        return Genre.builder()
+                .id(rs.getInt("GENRE_ID"))
+                .name(rs.getString("NAME").trim())
+                .build();
     }
 }

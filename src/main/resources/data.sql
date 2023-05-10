@@ -1,9 +1,9 @@
-INSERT INTO genre (name) VALUES('Комедия');
-INSERT INTO genre (name) VALUES('Драма');
-INSERT INTO genre (name) VALUES('Мультфильм');
-INSERT INTO genre (name) VALUES('Триллер');
-INSERT INTO genre (name) VALUES('Документальный');
-INSERT INTO genre (name) VALUES('Боевик');
+MERGE INTO genre (GENRE_ID, NAME) KEY (GENRE_ID) VALUES (1, 'Комедия');
+MERGE INTO genre (GENRE_ID, NAME) KEY (GENRE_ID) VALUES (2, 'Драма');
+MERGE INTO genre (GENRE_ID, NAME) KEY (GENRE_ID) VALUES (3, 'Мультфильм');
+MERGE INTO genre (GENRE_ID, NAME) KEY (GENRE_ID) VALUES (4, 'Триллер');
+MERGE INTO genre (GENRE_ID, NAME) KEY (GENRE_ID) VALUES (5, 'Документальный');
+MERGE INTO genre (GENRE_ID, NAME) KEY (GENRE_ID) VALUES (6, 'Боевик');
 
 INSERT INTO rating (name, description) VALUES('G', 'У фильма нет возрастных ограничений.');
 INSERT INTO rating (name, description) VALUES('PG', 'Детям рекомендуется смотреть фильм с родителями.');

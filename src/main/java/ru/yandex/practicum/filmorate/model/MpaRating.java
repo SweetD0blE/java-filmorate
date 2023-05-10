@@ -15,4 +15,5 @@ public class MpaRating {
     private int id;
     @NotBlank
     private String name;
+    private String description;
 }

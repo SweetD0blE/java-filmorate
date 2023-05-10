@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/mpa")
-@Slf4j
 public class MpaRatingController {
     private final MpaRatingDao mpaRatingDao;
 
@@ -21,8 +19,8 @@ public class MpaRatingController {
     }
 
     @GetMapping
-    public List<MpaRating> getMpa() {
-        return mpaRatingDao.getMpa();
+    public List<MpaRating> findAllMpa() {
+        return mpaRatingDao.findAllMpa();
     }
 
     @GetMapping("/{id}")
