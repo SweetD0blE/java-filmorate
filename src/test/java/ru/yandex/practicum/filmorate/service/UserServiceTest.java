@@ -35,6 +35,7 @@ class UserServiceTest {
                 .birthday(LocalDate.now())
                 .build();
         User expectUser = userService.create(userTest);
+        
         assertNotEquals(-1, expectUser.getId(), "Пользователь не записан в БД, id не был присвоен");
     }
 
