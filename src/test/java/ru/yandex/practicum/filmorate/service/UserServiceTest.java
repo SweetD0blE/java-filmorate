@@ -35,7 +35,6 @@ class UserServiceTest {
                 .birthday(LocalDate.now())
                 .build();
         User expectUser = userService.create(userTest);
-        
         assertNotEquals(-1, expectUser.getId(), "Пользователь не записан в БД, id не был присвоен");
     }
 
@@ -45,7 +44,6 @@ class UserServiceTest {
                 StorageException.class,
                 () -> userService.getUser(-1)
         );
-
         assertEquals("Такого пользователя не существует", exception.getMessage());
     }
 
@@ -61,7 +59,6 @@ class UserServiceTest {
                 StorageException.class,
                 () -> userService.update(userTest)
         );
-
         assertEquals("Невозможно обновить id -1 .Его нет в БД", exception.getMessage());
     }
 
@@ -90,8 +87,6 @@ class UserServiceTest {
         userFriend = userService.addFriend(userFriend.getId(), userFriend2.getId());
 
         List<User> commonFriends = userService.getCommonFriends(user.getId(), userFriend.getId());
-
-
         assertEquals(1, commonFriends.size(), "Не ищет общих друзей");
     }
 }
