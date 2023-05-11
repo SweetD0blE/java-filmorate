@@ -1,22 +1,17 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dao.UserStorage;
 import ru.yandex.practicum.filmorate.exception.ServiceException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class UserService {
     private final UserStorage userStorage;
 
-    @Autowired
     public UserService(UserStorage userStorage) {
         this.userStorage = userStorage;
     }
@@ -32,71 +27,31 @@ public class UserService {
     }
 
    public List<User> getUsers() {
-        return userStorage.getUsers();
+        return userStorage.findAll();
    }
 
    public User getUser(int id) {
-        return userStorage.getUser(id);
+        return userStorage.findById(id);
    }
 
    public User addFriend(int id, int idFriend) {
-        if (id == idFriend) {
-            throw new ServiceException("Невозможно добавить в друзья самого себя. Ваше id=" + id + ". Id друга=" + idFriend);
+        if (id == idFriend || userStorage.findById(id) == null || userStorage.findById(idFriend) == null) {
+            throw new ServiceException("Невозможно добавить друга. Ваше id= " + id + ". Id друга= " + idFriend);
         }
-        User user = userStorage.getUser(id);
-        User friend = userStorage.getUser(idFriend);
-
-       Set<Integer> friends = user.getFriends();
-       friends.add(idFriend);
-       user.setFriends(friends);
-
-       friends = friend.getFriends();
-       friends.add(id);
-       friend.setFriends(friends);
-       update(friend);
-
-       return update(user);
+       return userStorage.addFriend(id, idFriend);
    }
 
    public User deleteFriend(int id, int idFriend) {
-        User user = userStorage.getUser(id);
-        User friend = userStorage.getUser(idFriend);
-
-        Set<Integer> friends = user.getFriends();
-        friends.remove(idFriend);
-        user.setFriends(friends);
-
-        friends = friend.getFriends();
-        friends.remove(id);
-        friend.setFriends(friends);
-        update(friend);
-
-        return update(user);
+        return userStorage.deleteFriend(id, idFriend);
    }
 
    public List<User> getFriends(int id) {
-        User user = userStorage.getUser(id);
-        List<User> friends = new ArrayList<>();
-
-        Set<Integer> idFriends = user.getFriends();
-
-        for (Integer i : idFriends) {
-            friends.add(userStorage.getUser(i));
-        }
-        return friends;
+        return userStorage.getFriends(id);
    }
 
-   public List<User> getCommonFriends(int id, int otherId) {
-        Set<Integer> friendsUser = new HashSet<>(userStorage.getUser(id).getFriends());
-        Set<Integer> friendsOtherUser = new HashSet<>(userStorage.getUser(otherId).getFriends());
-        List<User> commonFriends = new ArrayList<>();
-        friendsUser.retainAll(friendsOtherUser);
-
-        for (Integer i : friendsUser) {
-            commonFriends.add(userStorage.getUser(i));
-        }
-        return commonFriends;
-   }
+    public List<User> getCommonFriends(int userId, int friendId) {
+        return userStorage.getCommonFriends(userId, friendId);
+    }
 
     private void checkUserName(User user) {
         if (user.getName() == null) {
